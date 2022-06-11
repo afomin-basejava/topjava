@@ -46,6 +46,8 @@
                     <td>
                         <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate"/>
                         <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parsedDate}"/>
+<%--    Create a custom Function for JSTL через tag library descriptor (TLD)
+                    https://findnerd.com/list/view/How-to-create-a-custom-Function-for-JSTL/2869/--%>
 <%--    https://stackoverflow.com/questions/35606551/jstl-localdatetime-format#35607225--%>
 <%--                            ${meal.dateTime.format( DateTimeFormatter.ofPattern("dd.MM.yyyy"))}--%>
                     </td>
