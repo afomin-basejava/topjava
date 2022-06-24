@@ -29,8 +29,7 @@
             <th>Date</th>
             <th>Description</th>
             <th>Calories</th>
-            <th></th>
-            <th></th>
+            <th colspan="2">Action</th>
         </tr>
         </thead>
         <c:forEach items="${requestScope.meals}" var="meal">

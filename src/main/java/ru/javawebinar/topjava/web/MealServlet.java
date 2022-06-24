@@ -29,9 +29,9 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String id = request.getParameter("id");
-
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+//        String id = request.getParameter("id");
+        int id = getId(request);
+        Meal meal = new Meal(id == 0 ? null : id,
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
@@ -51,6 +51,10 @@ public class MealServlet extends HttpServlet {
                 log.info("Delete id={}", id);
                 repository.delete(id);
                 response.sendRedirect("meals");
+                break;
+            case "created":
+            case "updated":
+                System.out.println("MealServlet");
                 break;
             case "create":
             case "update":
@@ -72,6 +76,6 @@ public class MealServlet extends HttpServlet {
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
-        return Integer.parseInt(paramId);
+        return Integer.parseInt(paramId.isEmpty() ? "0" : paramId);
     }
 }
