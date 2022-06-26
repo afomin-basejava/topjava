@@ -30,10 +30,8 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal save(Integer userId, Meal meal) {
         if (meal.isNew()) {
-            log.debug("save: create for user {} {}", userId, meal);
             meal.setId(counter.incrementAndGet());
         } else {
-            log.debug("save: update for user {} {}", userId, meal);
             userMeals.remove(meal);
         }
         userMeals.add(meal);
