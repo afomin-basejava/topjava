@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.util.Collection;
+import java.util.List;
 
 // TODO add userId
 public interface MealRepository {
@@ -16,5 +18,5 @@ public interface MealRepository {
     Meal get(Integer userId, int id);
 
     // ORDERED dateTime desc
-    Collection<Meal> getAll(Integer userId);
+    List<Meal> getAll(Integer userId);
 }

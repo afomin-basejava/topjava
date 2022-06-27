@@ -17,8 +17,6 @@ import static ru.javawebinar.topjava.util.MealsUtil.meals;
 @Repository
 public class InMemoryMealRepository implements MealRepository {
     public static final Logger log = LoggerFactory.getLogger(InMemoryMealRepository.class);
-    //    каждый конкретный ==аутентифицированный== пользователь
-    //    реализовать хранение еды для каждого пользователя можно с добавлением поля userId в Meal ИЛИ без него
     private final Map<Integer, Set<Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger();
     private final Set<Meal> userMeals = new TreeSet<>(Comparator.comparing(Meal::getId));
@@ -27,8 +25,14 @@ public class InMemoryMealRepository implements MealRepository {
         meals.forEach(meal -> save(SecurityUtil.authUserId(), meal));
     }
 
+    public Map<Integer, Set<Meal>> getRepository() {
+        return repository;
+    }
+
     @Override
     public Meal save(Integer userId, Meal meal) {
+        String msg = meal.isNew() ? "save - new" : "save - update" + "{}";
+        log.info(msg, meal);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         } else {
@@ -41,14 +45,16 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(Integer userId, int id) {
-        boolean removed = userMeals.remove(findMealById(userMeals, id));
+        log.info("delete");
+        boolean removed = userMeals.remove(findById(userMeals, id));
         repository.put(userId, userMeals);
         return removed;
     }
 
     @Override
     public Meal get(Integer userId, int id) {
-        return findMealById(repository.get(userId), id);
+        log.info("get");
+        return findById(repository.get(userId), id);
     }
 
     @Override
@@ -59,7 +65,7 @@ public class InMemoryMealRepository implements MealRepository {
                 .collect(Collectors.toList());
     }
 
-    private Meal findMealById(Set<Meal> meals, int id) {
+    private Meal findById(Set<Meal> meals, int id) {
         return meals.stream()
                 .filter(meal -> meal.getId() == id)
                 .findFirst()
