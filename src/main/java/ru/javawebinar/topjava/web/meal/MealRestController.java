@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.util.Collection;
 import java.util.List;
 
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
@@ -38,6 +41,11 @@ public class MealRestController {
     public List<Meal> getAll(int userId) {
         log.info("getAll");
         return service.getAll(userId);
+    }
+
+    public List<MealTo> getTos(int userId, int caloriesPerDay) {
+        log.info("getTos");
+        return MealsUtil.getTos(getAll(userId), caloriesPerDay);
     }
 
 }

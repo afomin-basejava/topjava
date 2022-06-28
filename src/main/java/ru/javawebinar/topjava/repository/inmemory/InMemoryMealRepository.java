@@ -25,14 +25,10 @@ public class InMemoryMealRepository implements MealRepository {
         meals.forEach(meal -> save(SecurityUtil.authUserId(), meal));
     }
 
-    public Map<Integer, Set<Meal>> getRepository() {
-        return repository;
-    }
-
     @Override
     public Meal save(Integer userId, Meal meal) {
-        String msg = meal.isNew() ? "save - new" : "save - update" + "{}";
-        log.info(msg, meal);
+        String msg = meal.isNew() ? "save - new" + " {}"  + " {}" : "save - update" + " {}" + " {}";
+        log.info(msg, meal, userId);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         } else {
@@ -60,7 +56,8 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getAll(Integer userId) {
         log.debug("getAll for user {}", userId);
-        return repository.get(userId).stream()
+        return repository.get(userId)
+                .stream()
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
