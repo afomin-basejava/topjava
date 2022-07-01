@@ -34,7 +34,7 @@ public class UserTestData {
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
     }
-
+//
     public static void assertMatch(User actual, User expected) {
         assertThat(actual).usingRecursiveComparison().ignoringFields("registered", "roles").isEqualTo(expected);
     }

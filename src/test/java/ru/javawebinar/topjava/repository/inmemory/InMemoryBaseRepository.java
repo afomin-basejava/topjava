@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
-
+//
 public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
 
     static final AtomicInteger counter = new AtomicInteger(START_SEQ);

@@ -20,7 +20,7 @@ import static ru.javawebinar.topjava.MealTestData.meal100003;
 import static ru.javawebinar.topjava.MealTestData.meal100005;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
-
+//
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
