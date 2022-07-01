@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-//
+
 public class MealTestData {
     public static final Meal meal100003 = new Meal(100003, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000);
     public static final Meal meal100004 = new Meal(100004, LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500);
@@ -39,4 +39,5 @@ public class MealTestData {
                 .filter(meal -> meal.getDateTime().compareTo(from) >= 0 && meal.getDateTime().compareTo(to) < 0)
                 .collect(Collectors.toList());
     }
+
 }

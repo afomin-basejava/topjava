@@ -9,7 +9,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
-
+//
 public class UserTestData {
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
@@ -34,7 +34,7 @@ public class UserTestData {
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
     }
-//
+
     public static void assertMatch(User actual, User expected) {
         assertThat(actual).usingRecursiveComparison().ignoringFields("registered", "roles").isEqualTo(expected);
     }
