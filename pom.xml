@@ -127,26 +127,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--- ORM -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
-        </dependency>
-
-        <!--http://hibernate.org/validator/documentation/getting-started/#unified-expression-language-el-->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>${javax-el.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!--Web-->
         <dependency>
             <groupId>javax.servlet</groupId>
