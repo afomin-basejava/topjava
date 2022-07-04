@@ -36,6 +36,7 @@ public class MealServiceTest {
     private static final Logger log = getLogger("testDuration");
 
     private static final StringBuilder testDuration = new StringBuilder("\n");
+    private static long totalDuration;
 
     @Rule
     public final TestWatcher testWatcher = new TestWatcher() {
@@ -56,6 +57,7 @@ public class MealServiceTest {
         private String getDuration(Description description) {
             String duration = description.getMethodName() + " -> " + (end - start) + " ms" + "\n";
             testDuration.append(duration);
+            totalDuration += end - start;
             return "\n" + duration;
         }
     };
@@ -65,7 +67,7 @@ public class MealServiceTest {
 
     @AfterClass
     public static void printResult() {
-        log.info("" + testDuration);
+        log.info("" + testDuration + "totalDuration: " + totalDuration);
     }
 
     @Test
