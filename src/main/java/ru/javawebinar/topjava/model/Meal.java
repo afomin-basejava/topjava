@@ -15,8 +15,7 @@ import java.time.LocalTime;
         @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC "),
         @NamedQuery(name = Meal.GET_BETWEEN, query = "SELECT m FROM Meal m " +
                                                      "WHERE m.user.id=:userId AND m.dateTime>=:startDateTime AND m.dateTime<:endDateTime " +
-                                                     "ORDER BY m.dateTime DESC "),
-
+                                                     "ORDER BY m.dateTime DESC ")
 })
 @Entity
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(name = "meals_unique_user_datetime_idx", columnNames = {"user_id", "date_time"})})
@@ -41,7 +40,7 @@ public class Meal extends AbstractBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Meal() {

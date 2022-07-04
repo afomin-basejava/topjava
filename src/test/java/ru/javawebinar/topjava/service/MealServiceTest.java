@@ -1,7 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,6 +20,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import static org.junit.Assert.assertThrows;
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -27,8 +33,40 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static final Logger log = getLogger("testDuration");
+
+    private static final StringBuilder testDuration = new StringBuilder("\n");
+
+    @Rule
+    public final TestWatcher testWatcher = new TestWatcher() {
+        private long start;
+        private long end;
+
+        @Override
+        protected void starting(Description description) {
+            start = System.currentTimeMillis();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            end = System.currentTimeMillis();
+            log.info(getDuration(description));
+        }
+
+        private String getDuration(Description description) {
+            String duration = description.getMethodName() + " -> " + (end - start) + " ms" + "\n";
+            testDuration.append(duration);
+            return "\n" + duration;
+        }
+    };
+
     @Autowired
     private MealService service;
+
+    @AfterClass
+    public static void printResult() {
+        log.info("" + testDuration);
+    }
 
     @Test
     public void delete() {
