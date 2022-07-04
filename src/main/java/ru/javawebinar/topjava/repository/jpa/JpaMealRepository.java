@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,14 +24,14 @@ public class JpaMealRepository implements MealRepository {
     @Transactional
     public Meal save(Meal meal, int userId) {
         User user = entityManager.getReference(User.class, userId);
-        meal.setUser(user);
         if (meal.isNew()) {
+            meal.setUser(user);
             entityManager.persist(meal);
             return meal;
-        }
-        if (get(meal.id(), userId) == null) {
+        } else if (get(meal.id(), userId) == null) {
             return null;
         }
+        meal.setUser(user);
         return entityManager.merge(meal);
     }
 
@@ -48,27 +47,19 @@ public class JpaMealRepository implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         Meal meal = entityManager.find(Meal.class, id);
-        if (meal != null && meal.getUser().getId() == userId) {
-            return meal;
-        } else {
-            return null;
-        }
+        return meal != null && meal.getUser().getId() == userId ? meal : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        Query query = entityManager.createNamedQuery(GETALL);
-        return query
+        return entityManager.createNamedQuery(GET_ALL, Meal.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        Query query = entityManager.createQuery("SELECT m FROM Meal m " +
-                                                "WHERE m.user.id=:userId AND m.dateTime>=:startDateTime AND m.dateTime<:endDateTime " +
-                                                "ORDER BY m.dateTime DESC ");
-        return query
+        return entityManager.createNamedQuery(GET_BETWEEN, Meal.class)
                 .setParameter("userId", userId)
                 .setParameter("startDateTime", startDateTime)
                 .setParameter("endDateTime", endDateTime)
