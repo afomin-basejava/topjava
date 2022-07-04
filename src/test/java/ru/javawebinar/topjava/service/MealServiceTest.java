@@ -18,6 +18,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -36,7 +37,6 @@ public class MealServiceTest {
     private static final Logger log = getLogger("testDuration");
 
     private static final StringBuilder testDuration = new StringBuilder("\n");
-    private static long totalDuration;
 
     @Rule
     public final TestWatcher testWatcher = new TestWatcher() {
@@ -45,19 +45,18 @@ public class MealServiceTest {
 
         @Override
         protected void starting(Description description) {
-            start = System.currentTimeMillis();
+            start = System.nanoTime();
         }
 
         @Override
         protected void finished(Description description) {
-            end = System.currentTimeMillis();
+            end = System.nanoTime();
             log.info(getDuration(description));
         }
 
         private String getDuration(Description description) {
-            String duration = description.getMethodName() + " -> " + (end - start) + " ms" + "\n";
+            String duration = String.format("%40s  ->  %3d ms\n", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(end - start));
             testDuration.append(duration);
-            totalDuration += end - start;
             return "\n" + duration;
         }
     };
@@ -67,7 +66,7 @@ public class MealServiceTest {
 
     @AfterClass
     public static void printResult() {
-        log.info("" + testDuration + "totalDuration: " + totalDuration);
+        log.info("" + testDuration);
     }
 
     @Test
