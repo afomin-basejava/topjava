@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
@@ -34,23 +35,28 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
+        Meal meal = get(id, userId);
+        if (meal != null) {
+            mealRepository.delete(meal);
+            return true;
+        }
         return false;
     }
 
     @Override
-    @Transactional
     public Meal get(int id, int userId) {
         return mealRepository.findById(id).filter(meal -> meal.getUser().id() == userId).orElse(null);
     }
 
 
     @Override
+//    @Query("SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC")
     public List<Meal> getAll(int userId) {
-        return null;
+        return mealRepository.getAll(userId);
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return null;
+        return mealRepository.getBetweenHalfOpen(startDateTime, endDateTime, userId);
     }
 }
