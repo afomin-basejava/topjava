@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
@@ -27,7 +28,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public abstract class BaseServiceTest {
     private static final Logger log = getLogger("result");
 
-    private static final StringBuilder results = new StringBuilder();
+    private static StringBuilder results = new StringBuilder();
 
     @Rule
     // http://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-bussiness-relev
@@ -39,6 +40,11 @@ public abstract class BaseServiceTest {
             log.info(result + " ms\n");
         }
     };
+
+    @BeforeClass
+    public static void reset() {
+        results = new StringBuilder();
+    }
 
     @AfterClass
     public static void printResult() {
