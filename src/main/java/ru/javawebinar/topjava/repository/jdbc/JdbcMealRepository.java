@@ -21,7 +21,7 @@ import java.util.List;
 
 public abstract class JdbcMealRepository<T> implements MealRepository {
 
-    public static final Logger log = LoggerFactory.getLogger("fixHsqlDbTime");
+    static final Logger log = LoggerFactory.getLogger(JdbcMealRepository.class);
 
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
@@ -40,7 +40,7 @@ public abstract class JdbcMealRepository<T> implements MealRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    abstract T fixDbTime(LocalDateTime ldt);
+    abstract T getDbTime(LocalDateTime ldt);
 
     @Override
     public Meal save(Meal meal, int userId) {
@@ -48,7 +48,7 @@ public abstract class JdbcMealRepository<T> implements MealRepository {
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", fixDbTime(meal.getDateTime()))
+                .addValue("date_time", getDbTime(meal.getDateTime()))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -87,7 +87,7 @@ public abstract class JdbcMealRepository<T> implements MealRepository {
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, fixDbTime(startDateTime), fixDbTime(endDateTime));
+                ROW_MAPPER, userId, getDbTime(startDateTime), getDbTime(endDateTime));
     }
 }
 
@@ -97,11 +97,11 @@ class PostgresJdbcMealRepository extends JdbcMealRepository<LocalDateTime> {
 
     public PostgresJdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
-        log.info("POSTGRES_DB");
+        log.debug("POSTGRES_DB");
     }
 
     @Override
-    LocalDateTime fixDbTime(LocalDateTime ldt) {
+    LocalDateTime getDbTime(LocalDateTime ldt) {
         return ldt;
     }
 }
@@ -112,11 +112,11 @@ class HsqldbJdbcMealRepository extends JdbcMealRepository<Timestamp> {
 
     public HsqldbJdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
-        log.info("HSQL_DB");
+        log.debug("HSQL_DB");
     }
 
     @Override
-    Timestamp fixDbTime(LocalDateTime ldt) {
+    Timestamp getDbTime(LocalDateTime ldt) {
         return Timestamp.valueOf(ldt);
     }
 }

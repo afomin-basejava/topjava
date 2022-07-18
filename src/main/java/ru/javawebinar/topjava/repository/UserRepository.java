@@ -18,4 +18,8 @@ public interface UserRepository {
     User getByEmail(String email);
 
     List<User> getAll();
+
+    default User getUserMeals(int userId){
+        throw new UnsupportedOperationException("method must to have realization!");
+    };
 }

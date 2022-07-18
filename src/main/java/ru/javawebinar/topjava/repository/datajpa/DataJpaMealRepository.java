@@ -22,7 +22,6 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-//        if (get(meal.id(), userId) == null && !meal.isNew()) { short-circuite - order does matter
         if (!meal.isNew() && get(meal.id(), userId) == null) {
             return null;
         }
@@ -36,18 +35,9 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
-    @Transactional
     public Meal get(int id, int userId) {
-    /*
-    •get - посмотри, какие запросы выполняются. Там есть лишний запрос за всеми данными пользователя.
-    Подумай, откуда он взялся. <-- .filter(meal -> meal.getUser().id() == userId)
-    */
-        return mealRepository
-                .findById(id)
-                .filter(meal -> meal.getUser().id() == userId)
-                .orElse(null);
+        return mealRepository.get(id, userId);
     }
-
 
     @Override
     public List<Meal> getAll(int userId) {
@@ -57,5 +47,10 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return mealRepository.getBetweenHalfOpen(startDateTime, endDateTime, userId);
+    }
+
+    @Override
+    public Meal getMealWithUser(int id, int userId){
+        return mealRepository.getMealWithUser(id, userId);
     }
 }
