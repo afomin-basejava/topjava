@@ -19,7 +19,7 @@ public interface UserRepository {
 
     List<User> getAll();
 
-    default User getUserMeals(int userId){
-        throw new UnsupportedOperationException("method must to have realization!");
+    default User getWithMeals(int userId){
+        throw new UnsupportedOperationException("method must to have realization for DATA_JPA repository!");
     };
 }

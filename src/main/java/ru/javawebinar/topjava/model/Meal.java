@@ -17,7 +17,7 @@ import java.time.LocalTime;
                     SELECT m FROM Meal m 
                     WHERE m.user.id=:userId AND m.dateTime >= :startDateTime AND m.dateTime < :endDateTime ORDER BY m.dateTime DESC
                 """),
-        @NamedQuery(name = Meal.GET_MEAL_WITH_USER, query = """
+        @NamedQuery(name = Meal.GET_WITH_USER, query = """
                     SELECT m FROM Meal m 
                     JOIN FETCH m.user
                         WHERE m.user.id=:userId AND m.id=:id
@@ -31,7 +31,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String ALL_SORTED = "Meal.getAll";
     public static final String DELETE = "Meal.delete";
     public static final String GET_BETWEEN = "Meal.getBetween";
-    public static final String GET_MEAL_WITH_USER = "Meal.getWithUser";
+    public static final String GET_WITH_USER = "Meal.getWithUser";
 
     public static final String USER = "user";
 
@@ -48,7 +48,7 @@ public class Meal extends AbstractBaseEntity {
     @Range(min = 10, max = 5000)
     private int calories;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private User user;
@@ -110,10 +110,10 @@ public class Meal extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Meal{" +
-                "id=" + id +
-                ", dateTime=" + dateTime +
-                ", description='" + description + '\'' +
-                ", calories=" + calories +
-                '}';
+               "id=" + id +
+               ", dateTime=" + dateTime +
+               ", description='" + description + '\'' +
+               ", calories=" + calories +
+               '}';
     }
 }
