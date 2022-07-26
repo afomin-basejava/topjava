@@ -41,7 +41,7 @@ public class RootController {
         log.info("setUser {}", userId);
         SecurityUtil.setAuthUserId(userId);
 
-        return "redirect:/meals";
+        return "redirect:meals";
     }
 
     @GetMapping("/meals")
