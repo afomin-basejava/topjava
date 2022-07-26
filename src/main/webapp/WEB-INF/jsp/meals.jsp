@@ -9,9 +9,8 @@
 <%--</head>--%>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h3><a href="index">Home</a></h3>
-    <hr/>
     <h2>Meals</h2>
     <form method="get" action="meals/filter">
         <dl>
