@@ -26,7 +26,7 @@
             <tr>
                 <td><c:out value="${user.name}"/></td>
                 <td><a href="mailto:${user.email}">${user.email}</a></td>
-                <td>${user.roles}</td>
+                <td>${user.roles.stream().reduce("", (r1, r2) -> r1.toString().concat(" ".concat(r2.toString())))}</td>
                 <td>${user.enabled}</td>
                 <td><fmt:formatDate value="${user.registered}" pattern="dd-MM-yyyy"/></td>
             </tr>
