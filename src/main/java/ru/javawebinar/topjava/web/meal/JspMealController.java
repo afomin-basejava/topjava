@@ -18,7 +18,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
 @RequestMapping("/meals")
-public class JspMealController extends MealController {
+public class JspMealController extends AbstractMealController {
 
     @GetMapping("/delete")
     public String delete(HttpServletRequest request) {
@@ -42,8 +42,8 @@ public class JspMealController extends MealController {
         return "mealForm";
     }
 
-    @PostMapping()
-    public String update(HttpServletRequest request) {
+    @PostMapping
+    public String save(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),

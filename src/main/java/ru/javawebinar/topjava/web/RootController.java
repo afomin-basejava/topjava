@@ -19,6 +19,7 @@ public class RootController {
 
     @Autowired
     private UserService service;
+
     @Autowired
     MealService mealService;
 
@@ -40,7 +41,6 @@ public class RootController {
         int userId = Integer.parseInt(request.getParameter("userId"));
         log.info("setUser {}", userId);
         SecurityUtil.setAuthUserId(userId);
-
         return "redirect:meals";
     }
 

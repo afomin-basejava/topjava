@@ -24,7 +24,10 @@
     <logger name="org.postgresql" level="debug"/>
     <logger name="org.springframework.jdbc" level="info"/>
     <logger name="ru.javawebinar.topjava" level="debug"/>
-    <logger name="org.springframework.transaction" level="debug"/>
+    <logger name="org.springframework.transaction" level="info"/>
+<!--    logging.level.ROOT=INFO-->
+<!--    logging.level.org.springframework.orm.jpa=DEBUG-->
+<!--    logging.level.org.springframework.transaction=DEBUG-->
 
     <root level="INFO">
         <appender-ref ref="console"/>
