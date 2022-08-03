@@ -78,7 +78,7 @@
                         <containerId>tomcat9x</containerId>
                         <systemProperties>
                             <file.encoding>UTF-8</file.encoding>
-                            <spring.profiles.active>tomcat,datajpa</spring.profiles.active>
+                            <spring.profiles.active>tomcat,jdbc</spring.profiles.active>
                         </systemProperties>
                         <dependencies>
                             <dependency>
