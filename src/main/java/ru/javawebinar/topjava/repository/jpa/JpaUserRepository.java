@@ -60,7 +60,7 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public User getByEmail(String email) { //work if "UNIQUE INDEX users_unique_email_idx ON users (email)" only
+    public User getByEmail(String email) {
         List<User> users = em.createNamedQuery(User.BY_EMAIL, User.class)
                 .setParameter(1, email)
                 .getResultList();
