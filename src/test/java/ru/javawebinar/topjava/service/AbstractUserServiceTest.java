@@ -47,6 +47,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(service.get(newId), newUser);
+        created = service.create(getNewGuest());
+        newId = created.id();
+        newUser = getNewGuest();
+        newUser.setId(newId);
+        USER_MATCHER.assertMatch(created, newUser);
+        USER_MATCHER.assertMatch(service.get(newId), newUser);
     }
 
     @Test
@@ -70,6 +76,10 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void get() {
         User user = service.get(USER_ID);
         USER_MATCHER.assertMatch(user, UserTestData.user);
+        user = service.get(GUEST_ID);
+        USER_MATCHER.assertMatch(user, guest);
+        user = service.get(ADMIN_ID);
+        USER_MATCHER.assertMatch(user, admin);
     }
 
     @Test
@@ -81,6 +91,15 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void getByEmail() {
         User user = service.getByEmail("admin@gmail.com");
         USER_MATCHER.assertMatch(user, admin);
+        user = service.getByEmail("guest@gmail.com");
+        USER_MATCHER.assertMatch(user, guest);
+        user = service.getByEmail("user@yandex.ru");
+        USER_MATCHER.assertMatch(user, UserTestData.user);
+    }
+
+    @Test
+    public void getByNotExistEmail() {
+        assertThrows(NotFoundException.class, () -> service.getByEmail("notexist@email.com"));
     }
 
     @Test
@@ -88,6 +107,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        updated = getUpdatedGuest();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(GUEST_ID), getUpdatedGuest());
     }
 
     @Test
@@ -97,7 +119,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void createWithException() throws Exception {
+    public void createWithException() {
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)));

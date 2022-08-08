@@ -21,8 +21,8 @@ public class ValidationUtil {
     private ValidationUtil() {
     }
 
-    public static <T> void validate(T clazz) {
-        Set<ConstraintViolation<T>> violations = validator.validate(clazz);
+    public static <T> void validate(T validatedEntity) {
+        Set<ConstraintViolation<T>> violations = validator.validate(validatedEntity);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }

@@ -1,10 +1,15 @@
 package ru.javawebinar.topjava;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.ui.ConcurrentModel;
+import org.springframework.ui.Model;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.web.meal.MealController;
+import ru.javawebinar.topjava.web.RootController;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.time.LocalDate;
@@ -14,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SpringMain {
+    @Autowired
+    private MealService mealService;
     public static void main(String[] args) {
         // java 7 automatic resource management (ARM)
         try (GenericXmlApplicationContext appCtx = new GenericXmlApplicationContext()) {
@@ -28,7 +35,7 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN));
             System.out.println();
 
-            MealController mealController = appCtx.getBean(MealController.class);
+            MealRestController mealController = appCtx.getBean(MealRestController.class);
             List<MealTo> filteredMealsWithExcess =
                     mealController.getBetween(
                             LocalDate.of(2020, Month.JANUARY, 30), LocalTime.of(7, 0),
@@ -36,6 +43,16 @@ public class SpringMain {
             filteredMealsWithExcess.forEach(System.out::println);
             System.out.println();
             System.out.println(mealController.getBetween(null, null, null, null));
+            System.out.println();
+
+            RootController rootController = appCtx.getBean(RootController.class);
+            System.out.println(rootController.root());
+
+            Model model = new ConcurrentModel();
+            System.out.println(rootController.getAll(model));
+            System.out.println(model.asMap().get("meals"));
+            System.out.println(rootController.getUsers(model));
+            System.out.println(model.asMap().get("users"));
         }
     }
 }

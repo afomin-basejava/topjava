@@ -25,6 +25,7 @@
     <logger name="org.springframework.jdbc" level="info"/>
     <logger name="ru.javawebinar.topjava" level="debug"/>
     <logger name="org.springframework.transaction" level="info"/>
+    <logger name="org.springframework.orm.jpa" level="debug"/>
 <!--    logging.level.ROOT=INFO-->
 <!--    logging.level.org.springframework.orm.jpa=DEBUG-->
 <!--    logging.level.org.springframework.transaction=DEBUG-->

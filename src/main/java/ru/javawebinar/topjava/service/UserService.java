@@ -1,7 +1,11 @@
 package ru.javawebinar.topjava.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.support.NoOpCacheManager;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
@@ -12,11 +16,13 @@ import java.util.List;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
+
 @Service
 public class UserService {
 
     private final UserRepository repository;
-
+    @Autowired
+    private CacheManager cacheManager;
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
@@ -26,6 +32,7 @@ public class UserService {
         Assert.notNull(user, "user must not be null");
         return repository.save(user);
     }
+
 
     @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
@@ -54,5 +61,10 @@ public class UserService {
 
     public User getWithMeals(int id) {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new NoOpCacheManager();
     }
 }

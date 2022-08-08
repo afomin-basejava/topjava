@@ -5,25 +5,28 @@ import ru.javawebinar.topjava.model.User;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {
-    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator("registered", "roles", "meals");
+    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator("registered", "meals");
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
     public static final int GUEST_ID = START_SEQ + 2;
-    public static final int GUEST_ID_WITH_ROLE = START_SEQ + 3;
     public static final int NOT_FOUND = 10;
 
     public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", Role.USER);
     public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ADMIN, Role.USER);
     public static final User guest = new User(GUEST_ID, "Guest", "guest@gmail.com", "guest");
-    public static final User guestWithRole = new User(GUEST_ID_WITH_ROLE, "Guest", "guest@gmail.com", "guest", Role.GUEST);
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
+    }
+
+    public static User getNewGuest() {
+        return new User(null, "NewGuest", "newguest@gmail.com", "newGuestPass", 1999, true, new Date(), Collections.singleton(Role.USER));
     }
 
     public static User getUpdated() {
@@ -34,6 +37,17 @@ public class UserTestData {
         updated.setPassword("newPass");
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
+        return updated;
+    }
+
+    public static User getUpdatedGuest() {
+        User updated = new User(guest);
+        updated.setEmail("updatedGuest@gmail.com");
+        updated.setName("UpdatedGuestName");
+        updated.setCaloriesPerDay(999);
+        updated.setPassword("newGPass");
+        updated.setEnabled(true);
+        updated.setRoles(List.of(Role.ADMIN, Role.USER));
         return updated;
     }
 }
