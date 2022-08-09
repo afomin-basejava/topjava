@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
-import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
@@ -74,11 +73,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void get() {
-        User user = service.get(USER_ID);
-        USER_MATCHER.assertMatch(user, UserTestData.user);
-        user = service.get(GUEST_ID);
-        USER_MATCHER.assertMatch(user, guest);
-        user = service.get(ADMIN_ID);
+        User user = service.get(ADMIN_ID);
         USER_MATCHER.assertMatch(user, admin);
     }
 
@@ -91,10 +86,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void getByEmail() {
         User user = service.getByEmail("admin@gmail.com");
         USER_MATCHER.assertMatch(user, admin);
-        user = service.getByEmail("guest@gmail.com");
-        USER_MATCHER.assertMatch(user, guest);
-        user = service.getByEmail("user@yandex.ru");
-        USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 
     @Test
@@ -104,10 +95,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void update() {
-        User updated = getUpdated();
-        service.update(updated);
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
-        updated = getUpdatedGuest();
+        User updated = updated = getUpdatedGuest();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(GUEST_ID), getUpdatedGuest());
     }

@@ -98,6 +98,7 @@ public class JdbcUserRepository implements UserRepository {
             }
 
             private User getUser(int userId, ResultSet rs) throws SQLException {
+                Collection<Role> roles = new HashSet<>(Collections.emptySet());
                 User user = new User(
                         userId,
                         rs.getString("name"),
@@ -106,8 +107,7 @@ public class JdbcUserRepository implements UserRepository {
                         rs.getInt("calories_per_day"),
                         rs.getBoolean("enabled"),
                         rs.getTimestamp("registered"),
-                        Collections.emptySet());
-                Collection<Role> roles = new HashSet<>(Collections.emptySet());
+                        roles);
                 do {
                     if (rs.getString("role") != null) {
                         roles.add(Role.valueOf(rs.getString("role")));
