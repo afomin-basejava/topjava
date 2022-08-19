@@ -82,6 +82,10 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
+        return getUsers();
+    }
+
+    private List<User> getUsers() {
         class UserRoles {
             static int id;
             static Role role;
@@ -94,8 +98,8 @@ public class JdbcUserRepository implements UserRepository {
 
         Map<Integer, Set<Role>> map = jdbcTemplate
                 .queryForStream("SELECT * FROM user_roles", (rs, rowNum) -> new UserRoles(rs.getInt(1), rs.getString(2)))
-                .collect(Collectors.groupingBy(userId->UserRoles.id,
-                        Collectors.mapping(role->UserRoles.role,
+                .collect(Collectors.groupingBy(userId-> UserRoles.id,
+                        Collectors.mapping(role-> UserRoles.role,
                                 Collectors.toSet())));
 
         List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
