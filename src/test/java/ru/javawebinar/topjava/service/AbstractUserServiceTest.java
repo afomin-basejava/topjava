@@ -1,42 +1,34 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
+
     @Autowired
     protected UserService service;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Lazy
-    @Autowired
-    protected JpaUtil jpaUtil;
-
     @Before
     public void setup() {
-        Objects.requireNonNull(cacheManager.getCache("users")).clear();
-        if (isJdbc()) return;
-        jpaUtil.clear2ndLevelHibernateCache();
+
     }
+
 
     @Test
     public void create() {
@@ -67,6 +59,15 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void deleteAll() {
+        service.delete(USER_ID);
+        service.delete(ADMIN_ID);
+        service.delete(GUEST_ID);
+        List<User> all = service.getAll();
+        USER_MATCHER.assertMatch(all, List.of());
+    }
+
+    @Test
     public void deletedNotFound() {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND));
     }
@@ -94,14 +95,17 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
-        User updated = updated = getUpdatedGuest();
+    public void a1update() {
+        User updated = updated = getUpdated();
         service.update(updated);
-        USER_MATCHER.assertMatch(service.get(GUEST_ID), getUpdatedGuest());
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        User usr = service.get(updated.id());
+        List<User> all = service.getAll();
+        USER_MATCHER.assertMatch(all, admin, guest, usr);
     }
 
     @Test
-    public void getAll() {
+    public void a2getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
     }

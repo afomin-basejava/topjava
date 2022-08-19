@@ -1,12 +1,10 @@
 package ru.javawebinar.topjava;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.RootController;
 import ru.javawebinar.topjava.web.meal.MealRestController;
@@ -19,8 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SpringMain {
-    @Autowired
-    private MealService mealService;
     public static void main(String[] args) {
         // java 7 automatic resource management (ARM)
         try (GenericXmlApplicationContext appCtx = new GenericXmlApplicationContext()) {

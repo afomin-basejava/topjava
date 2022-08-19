@@ -19,6 +19,7 @@ import ru.javawebinar.topjava.util.ValidationUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @Transactional(readOnly = true)
@@ -81,15 +82,39 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
+        class UserRoles {
+            static int id;
+            static Role role;
+
+            private UserRoles(int id, String role) {
+                UserRoles.id = id;
+                UserRoles.role = Role.valueOf(role);
+            }
+        }
+
+        Map<Integer, Set<Role>> map = jdbcTemplate
+                .queryForStream("SELECT * FROM user_roles", (rs, rowNum) -> new UserRoles(rs.getInt(1), rs.getString(2)))
+                .collect(Collectors.groupingBy(userId->UserRoles.id,
+                        Collectors.mapping(role->UserRoles.role,
+                                Collectors.toSet())));
+
+        List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        users.forEach(user -> user.setRoles(map.get(user.id())));
+        return users;
+    }
+
+    private List<User> getAllResultSetOnePassRSE() {
         final String query = "SELECT * FROM users u LEFT JOIN user_roles ur ON u.id = ur.user_id ORDER BY name, email";
         return jdbcTemplate.query(query, new ResultSetExtractor<>() {
             private final List<User> users = new ArrayList<>();
-            private int currentId = 100000;
+            private int currentId;
             private boolean isContinue = true;
 
             @Override
             public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                rs.next();
+                if (!rs.next()) {
+                    return users;
+                }
                 currentId = rs.getInt("id");
                 while (isContinue) {
                     users.add(getUser(currentId, rs));
@@ -98,16 +123,11 @@ public class JdbcUserRepository implements UserRepository {
             }
 
             private User getUser(int userId, ResultSet rs) throws SQLException {
-                Collection<Role> roles = new HashSet<>(Collections.emptySet());
-                User user = new User(
-                        userId,
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("calories_per_day"),
-                        rs.getBoolean("enabled"),
-                        rs.getTimestamp("registered"),
-                        roles);
+                Collection<Role> roles = new HashSet<>();
+                User user = ROW_MAPPER.mapRow(rs, 7);
+                if (user != null) {
+                    user.setRoles(roles);
+                }
                 do {
                     if (rs.getString("role") != null) {
                         roles.add(Role.valueOf(rs.getString("role")));
@@ -122,6 +142,41 @@ public class JdbcUserRepository implements UserRepository {
                 return user;
             }
         });
+    }
+
+    private List<User> getAllResultSetOnePassRSEByRecursion() {
+        final var query = "SELECT * FROM users u LEFT JOIN user_roles ur ON u.id = ur.user_id ORDER BY name, email";
+        List<User> users = new ArrayList<>();
+        ResultSetExtractor<List<User>> rse = new ResultSetExtractor<>() {
+            int current;
+
+            @Override
+            public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                if (!rs.next()) return users;
+                current = rs.getInt("id");
+                return getUsers(current, rs);
+            }
+
+            private List<User> getUsers(int userId, ResultSet rs) throws SQLException {
+                User user = ROW_MAPPER.mapRow(rs, 7);
+                user.setRoles(Collections.emptySet());
+                Collection<Role> roles = new HashSet<>(Collections.emptySet());
+                while (userId == rs.getInt("id")) {
+                    if (rs.getString("role") != null)
+                        roles.add(Role.valueOf(rs.getString("role")));
+                    if (!rs.next()) {
+                        user.setRoles(roles);
+                        users.add(user);
+                        return users;
+                    }
+                }
+                user.setRoles(roles);
+                users.add(user);
+                current = rs.getInt("id");
+                return getUsers(current, rs);
+            }
+        };
+        return jdbcTemplate.query(query, rse);
     }
 
     private User resetRoles(User user) {// User -> DB
@@ -146,4 +201,6 @@ public class JdbcUserRepository implements UserRepository {
         }
         return user;
     }
+
+
 }
