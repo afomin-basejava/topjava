@@ -10,9 +10,10 @@
          http://www.springframework.org/schema/cache/spring-cache.xsd
          http://www.springframework.org/schema/context
          https://www.springframework.org/schema/context/spring-context.xsd
-         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+         http://www.springframework.org/schema/util
+         https://www.springframework.org/schema/util/spring-util.xsd">
 
-    <!-- enables scanning for @Cacheable annotation -->
+    <!-- disables scanning for @Cacheable annotation -->
     <cache:annotation-driven cache-manager="noOpCacheManager"/>
 
     <bean id="noOpCacheManager" class="org.springframework.cache.support.NoOpCacheManager"/>
