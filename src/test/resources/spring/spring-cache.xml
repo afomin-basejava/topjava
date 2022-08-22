@@ -15,12 +15,12 @@
 
     <!-- disables scanning for @Cacheable annotation -->
     <cache:annotation-driven cache-manager="noOpCacheManager"/>
-
     <bean id="noOpCacheManager" class="org.springframework.cache.support.NoOpCacheManager"/>
 
+    <!-- enables/disables hibernate second level cache -->
     <beans profile="jpa, datajpa">
         <util:properties id="turnOffCache">
-            <prop key="entityManagerFactory.jpaPropertyMap['hibernate.cache.use_second_level_cache']">true</prop>
+            <prop key="entityManagerFactory.jpaPropertyMap['hibernate.cache.use_second_level_cache']">false</prop>
         </util:properties>
         <context:property-override properties-ref="turnOffCache"/>
     </beans>

@@ -2,10 +2,14 @@ package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
@@ -19,8 +23,19 @@ import java.util.Set;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
-
+//Optional 2
+//        •если сделан этот пункт, и кэш в тестах вообще отключен, то очищать уже ничего не нужно.
+//        Проверь свою реализацию Optional 2:
+//        убираем из AbstractUserServiceTest очистку кэшей
+//        ставим над AbstractUserServiceTest @FixMethodOrder(MethodSorters.NAME_ASCENDING), чтобы зафиксировать порядок выполнения тестов
+//        проверка отключения кэша Spring: меняем имена тестов на a1update, a2getAll. Запускаем JdbcUserServiceTest. Если кэш Spring отключен,
+//        то все тесты пройдут успешно.
+//        проверка отключения кэша 2го уровня: в тесте get вместо админа проверяем получение полььзователя с USER_ID
+//        (т.е. такого же, которого меняем в тесте update), потом меняем имена тестов на a1update, a2get.
+//        Запускает DataJpaUserServiceTest. Смотрим, успешно ли прошли все тесты.
+//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(AbstractUserServiceTest.class);
 
     @Autowired
     protected UserService service;
@@ -32,14 +47,23 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     protected JpaUtil jpaUtil;
 
+    @Autowired
+    private ApplicationContext appCtx;
+
     @Before
     public void setup() {
-        Objects.requireNonNull(cacheManager.getCache("users")).clear();
-        if (!isJdbc()) {
-            jpaUtil.clear2ndLevelHibernateCache();
+        if (!appCtx.containsBean("noOpCacheManager")) {
+            Objects.requireNonNull(cacheManager.getCache("users")).clear();
         }
+        if (!isJdbc()) {
+            boolean isSecondLevelCache = jpaUtil.isHibernateSecondLevelCache();
+            log.info("hibernate.cache.use_second_level_cache {} ", isSecondLevelCache);
+            if (isSecondLevelCache) {
+                jpaUtil.clear2ndLevelHibernateCache();
+            }
+        }
+        log.info("Spring cache(-s) is in progress {} ", cacheManager.getCacheNames());
     }
-
 
     @Test
     public void create() {
@@ -85,8 +109,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void get() {
-        User user = service.get(ADMIN_ID);
-        USER_MATCHER.assertMatch(user, admin);
+        User user = service.get(USER_ID);
+        USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 
     @Test
@@ -107,12 +131,10 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void update() {
-        User updated = getUpdated();
-        service.update(updated);
+        service.update(getUpdated());
         USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
-        User usr = service.get(updated.id());
         List<User> all = service.getAll();
-        USER_MATCHER.assertMatch(all, admin, guest, usr);
+        USER_MATCHER.assertMatch(all, admin, guest, getUpdated());
     }
 
     @Test
