@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.web.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 import java.io.IOException;
@@ -14,9 +13,6 @@ public class JsonUtil {
     public static <T> List<T> readValues(String json, Class<T> clazz) {
         ObjectReader reader = getMapper().readerFor(clazz);
         try {
-//            List<T> list =
-            MappingIterator<T> tMappingIterator = reader.<T>readValues(json);
-            //.readAll();
             return reader.<T>readValues(json).readAll();
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid read array from JSON:\n'" + json + "'", e);
