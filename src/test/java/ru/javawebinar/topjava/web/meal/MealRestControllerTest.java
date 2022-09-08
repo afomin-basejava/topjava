@@ -15,11 +15,10 @@ import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,16 +37,14 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(meal1))
-        ;
+                .andExpect(MEAL_MATCHER.contentJson(meal1));
     }
 
     @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + MEAL1_ID))
                 .andDo(print())
-                .andExpectAll(status().is2xxSuccessful(), status().isNoContent())
-        ;
+                .andExpect(status().isNoContent());
 //        assertThrows(org.springframework.web.util.NestedServletException.class, this::get);
         assertThrows(NotFoundException.class, () -> mealService.get(MEAL1_ID, USER_ID));
     }
@@ -58,14 +55,13 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/json"))
-                .andExpect(MEALTO_MATCHER.contentJson(MealsUtil.getTos(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY)))
-        ;
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay())));
     }
 
     @Test
     void createWithLocation() throws Exception {
         Meal newMeal = MealTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        ResultActions action = perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMeal)))
                 .andExpect(status().isCreated());
@@ -80,28 +76,27 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         Meal updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        ResultActions resultActions = perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
-                .andExpectAll(status().is2xxSuccessful())
+                .andExpect(status().isNoContent())
                 .andDo(print());
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
     @Test
     void getBetween() throws Exception {
-        LocalDateTime ldtStart = LocalDateTime.of(2020, Month.JANUARY, 30, 0, 0);
-        LocalDateTime ldtEnd = LocalDateTime.of(2020, Month.JANUARY, 31, 10, 1);
         List<MealTo> toList = List.of(
-                new MealTo(meal5.getId(), meal5.getDateTime(), meal5.getDescription(), meal5.getCalories(), true),
-                new MealTo(meal4.getId(), meal4.getDateTime(), meal4.getDescription(), meal4.getCalories(), true),
-                new MealTo(meal1.getId(), meal1.getDateTime(), meal1.getDescription(), meal1.getCalories(), false)
+                MealsUtil.createTo(meal5, true),
+                MealsUtil.createTo(meal4, true),
+                MealsUtil.createTo(meal1, false)
         );
 
-        perform(MockMvcRequestBuilders.get(REST_URL + "between?start=" + ldtStart + "&end=" + ldtEnd))
+        perform(MockMvcRequestBuilders.get(REST_URL + "between")
+                .param("start", "2020-01-30T00:00:00")
+                .param("end", "2020-01-31T10:01:00"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MEALTO_MATCHER.contentJson(toList))
-                .andReturn();
+                .andExpect(MEAL_TO_MATCHER.contentJson(toList));
     }
 }
