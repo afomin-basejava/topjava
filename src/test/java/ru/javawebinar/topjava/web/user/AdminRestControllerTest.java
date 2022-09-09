@@ -22,9 +22,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + '/';
 
-    @Autowired
-    private UserService userService;
-
     @Test
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID))
@@ -87,11 +84,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWihtMeals() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL+ ADMIN_ID + "/with-meals"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(userService.getWithMeals(ADMIN_ID)))
-        ;
+        getWihtMeals(REST_URL + ADMIN_ID + "/with-meals", ADMIN_ID);
     }
 }
