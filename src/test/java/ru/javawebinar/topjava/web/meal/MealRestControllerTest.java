@@ -76,7 +76,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         Meal updated = getUpdated();
-        ResultActions resultActions = perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent())
@@ -84,33 +84,32 @@ class MealRestControllerTest extends AbstractControllerTest {
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
-// Resolved Exception:
-//          Type = org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException
-// when use #getBetweenUsingConverters simultaneously
-//    @Test
-//    void getBetween() throws Exception {
-//        List<MealTo> toList = List.of(
-//                MealsUtil.createTo(meal5, true),
-//                MealsUtil.createTo(meal4, true),
-//                MealsUtil.createTo(meal1, false)
-//        );
-//
-//        perform(MockMvcRequestBuilders.get(REST_URL + "between")
-//                .param("start", "2020-01-30T00:00:00")
-//                .param("end", "2020-01-31T10:01:00"))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(MEAL_TO_MATCHER.contentJson(toList));
-//    }
+    @Test
+    void getBetween() throws Exception {
+        List<MealTo> expected = List.of(
+                MealsUtil.createTo(meal5, true),
+                MealsUtil.createTo(meal4, true),
+                MealsUtil.createTo(meal1, false));
+        perform(MockMvcRequestBuilders.get(REST_URL + "between")
+                .param("start", "2020-01-30T00:00:00")
+                .param("end", "2020-01-31T10:01:00"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MEAL_TO_MATCHER.contentJson(expected));
+
+        perform(MockMvcRequestBuilders.get(REST_URL + "between")
+                .param("start", ""))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals,SecurityUtil.authUserCaloriesPerDay())));
+    }
 
     @Test
     void getBetweenUsingConverters() throws Exception {
-        List<MealTo> toList = List.of(
+        List<MealTo> expected = List.of(
                 MealsUtil.createTo(meal5, true),
                 MealsUtil.createTo(meal4, true),
-                MealsUtil.createTo(meal1, false)
-        );
-
+                MealsUtil.createTo(meal1, false));
         perform(MockMvcRequestBuilders.get(REST_URL + "filter")
                 .param("startDate", "2020-01-30")
                 .param("startTime", "00:00:00")
@@ -118,6 +117,13 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .param("endTime", "10:01:00"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MEAL_TO_MATCHER.contentJson(toList));
+                .andExpect(MEAL_TO_MATCHER.contentJson(expected));
+
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter")
+                .param("startDate", (String) null)
+                .param("endTime", ""))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals,SecurityUtil.authUserCaloriesPerDay())));
     }
 }

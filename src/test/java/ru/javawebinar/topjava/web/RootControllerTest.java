@@ -49,14 +49,4 @@ class RootControllerTest extends AbstractControllerTest {
                         }
                 ));
     }
-
-    @Test
-    void getMealsExpectedValue() throws Exception {
-        perform(get("/meals"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("meals"))
-                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
-                .andExpect(model().attribute("meals", MealsUtil.getTos(MealTestData.meals, SecurityUtil.authUserCaloriesPerDay())));
-    }
 }

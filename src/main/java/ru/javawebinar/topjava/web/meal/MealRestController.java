@@ -4,10 +4,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -58,18 +60,23 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/between")
-    public List<MealTo> getBetween(@RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime start,
-                                   @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime end) {
+    public List<MealTo> getBetween(@RequestParam @Nullable @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime start,
+                                   @RequestParam @Nullable @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime end) {
+        if (start == null) {
+            start = DateTimeUtil.MIN_DATE;
+        }
+        if (end == null) {
+            end = DateTimeUtil.MAX_DATE;
+        }
         return super.getBetween(start.toLocalDate(), start.toLocalTime(), end.toLocalDate(), end.toLocalTime());
     }
 
-//<form method="get" action="meals/filter">
     @GetMapping("/filter")
-    public List<MealTo> getBetweenUsingConverters(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalTime startTime,
-            @RequestParam LocalDate endDate,
-            @RequestParam LocalTime endTime) {
+    public List<MealTo> getBetween(
+            @RequestParam @Nullable LocalDate startDate,
+            @RequestParam @Nullable LocalTime startTime,
+            @RequestParam @Nullable LocalDate endDate,
+            @RequestParam @Nullable LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
