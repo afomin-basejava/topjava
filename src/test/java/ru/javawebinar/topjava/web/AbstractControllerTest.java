@@ -32,7 +32,7 @@ public abstract class AbstractControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    protected WebApplicationContext webApplicationContext;
 
     @PostConstruct
     private void postConstruct() {
@@ -42,23 +42,4 @@ public abstract class AbstractControllerTest {
     protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
     }
-
-//    @Autowired
-//    protected UserService userService;
-//
-//    protected void getWihtMeals(String url, int userId) throws Exception {
-//        MvcResult mvcResult = perform(MockMvcRequestBuilders.get(url))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andReturn();
-//
-//
-//        User expected = userService.getWithMeals(userId);
-//        User actual = JsonUtil.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-//
-//        Assertions.assertThat(actual)
-//                .usingRecursiveComparison()
-//                .isEqualTo(expected);
-//    }
 }

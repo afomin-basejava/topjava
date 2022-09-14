@@ -1,13 +1,9 @@
 package ru.javawebinar.topjava.web.user;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.service.UserService;
-import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -16,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.web.user.ProfileRestController.REST_URL;
 
-class ProfileRestControllerTest extends AbstractControllerTest {
+class ProfileRestControllerTest extends AbstractUserControllerTest {
 
     @Test
     void get() throws Exception {
@@ -44,25 +40,18 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         USER_MATCHER.assertMatch(userService.get(USER_ID), updated);
     }
 
-    @Autowired
-    protected UserService userService;
-
     @Test
     void getWihtMeals() throws Exception {
-//        getWihtMeals(REST_URL + "/with-meals", USER_ID);
-        MvcResult mvcResult = perform(MockMvcRequestBuilders.get(REST_URL + "/with-meals"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(userService.getWithMeals(USER_ID)))
-                .andDo(print())
-                .andReturn();
+        getWihtMeals(REST_URL + "/with-meals", user);
+    }
 
-//        User expected = userService.getWithMeals(USER_ID);
-//        User actual = JsonUtil.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-//        USER_WITH_MEALS_MATCHER.assertMatch(actual, expected);
-//
-//        Assertions.assertThat(actual)
-//                .usingRecursiveComparison()
-//                .isEqualTo(expected);
+    @Test
+    void getWihtMealsUsingAssertions() throws Exception {
+        getWihtMealsUsingAssertions(REST_URL + "/with-meals", user);
+    }
+
+    @Test
+    void getWihtMealsUsingMatcher() throws Exception {
+        getWihtMealsUsingMatcher(REST_URL + "/with-meals", user);
     }
 }
