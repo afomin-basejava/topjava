@@ -41,17 +41,7 @@ class ProfileRestControllerTest extends AbstractUserControllerTest {
     }
 
     @Test
-    void getWihtMeals() throws Exception {
-        getWihtMeals(REST_URL + "/with-meals", user);
-    }
-
-    @Test
-    void getWihtMealsUsingAssertions() throws Exception {
-        getWihtMealsUsingAssertions(REST_URL + "/with-meals", user);
-    }
-
-    @Test
-    void getWihtMealsUsingMatcher() throws Exception {
-        getWihtMealsUsingMatcher(REST_URL + "/with-meals", user);
+    void getWithMeals() throws Exception {
+        getWithMeals(REST_URL + "/with-meals", user);
     }
 }

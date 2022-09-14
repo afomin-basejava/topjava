@@ -85,26 +85,6 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void getBetween() throws Exception {
-        List<MealTo> expected = List.of(
-                MealsUtil.createTo(meal5, true),
-                MealsUtil.createTo(meal4, true),
-                MealsUtil.createTo(meal1, false));
-        perform(MockMvcRequestBuilders.get(REST_URL + "between")
-                .param("start", "2020-01-30T00:00:00")
-                .param("end", "2020-01-31T10:01:00"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MEAL_TO_MATCHER.contentJson(expected));
-
-        perform(MockMvcRequestBuilders.get(REST_URL + "between")
-                .param("start", ""))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals,SecurityUtil.authUserCaloriesPerDay())));
-    }
-
-    @Test
     void getBetweenUsingConverters() throws Exception {
         List<MealTo> expected = List.of(
                 MealsUtil.createTo(meal5, true),
@@ -124,6 +104,6 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .param("endTime", ""))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals,SecurityUtil.authUserCaloriesPerDay())));
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay())));
     }
 }

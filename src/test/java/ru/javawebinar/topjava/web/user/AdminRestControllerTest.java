@@ -81,16 +81,6 @@ class AdminRestControllerTest extends AbstractUserControllerTest {
 
     @Test
     void getWihtMeals() throws Exception {
-        getWihtMeals(REST_URL + ADMIN_ID + "/with-meals", admin);
-    }
-
-    @Test
-    void getWihtMealsUsingAssertions() throws Exception {
-        getWihtMealsUsingAssertions(REST_URL + ADMIN_ID + "/with-meals", admin);
-    }
-
-    @Test
-    void getWihtMealsUsingMatcher() throws Exception {
-        getWihtMealsUsingMatcher(REST_URL + ADMIN_ID + "/with-meals", admin);
+        getWithMeals(REST_URL + ADMIN_ID + "/with-meals", admin);
     }
 }

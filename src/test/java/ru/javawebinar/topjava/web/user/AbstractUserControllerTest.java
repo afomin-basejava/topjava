@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.UserTestData.*;
 
-public class AbstractUserControllerTest extends AbstractControllerTest {
+public abstract class AbstractUserControllerTest extends AbstractControllerTest {
 
     @Autowired
     protected UserService userService;
@@ -32,38 +32,13 @@ public class AbstractUserControllerTest extends AbstractControllerTest {
                 format("Active profile -- %s-- is not DATAJPA", stream(environment.getActiveProfiles()).reduce("", (p1, p2) -> p1 + p2 + " ")));
     }
 
-     protected void getWihtMeals(String url, User user) throws Exception {
+     protected void getWithMeals(String url, User user) throws Exception {
         assumeDatajpaProfile();
         perform(MockMvcRequestBuilders.get(url))
                 .andExpectAll(
                         status().isOk(),
                         content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON),
-                        USER_WITH_MEAL_MATCHER.contentJson(user))
+                        USER_WITH_MEALS_MATCHER.contentJson(user))
                 .andDo(print());
-    }
-
-    protected void getWihtMealsUsingAssertions(String url, User user) throws Exception {
-        assumeDatajpaProfile();
-        MvcResult mvcResult = perform(MockMvcRequestBuilders.get(url))
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andReturn();
-        Assertions.assertThat(JsonUtil.readValue(mvcResult.getResponse().getContentAsString(), User.class))
-                .usingRecursiveComparison()
-                .ignoringFields("meals.user", "registered")
-                .isEqualTo(user);
-    }
-
-    void getWihtMealsUsingMatcher(String url, User user) throws Exception {
-        assumeDatajpaProfile();
-        MvcResult mvcResult = perform(MockMvcRequestBuilders.get(url))
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andReturn();
-        USER_WITH_MEAL_MATCHER.assertMatch(JsonUtil.readValue(mvcResult.getResponse().getContentAsString(), User.class), user);
     }
 }
