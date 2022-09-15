@@ -22,4 +22,6 @@ curl -XDELETE http://localhost:8080/topjava/rest/auth-user/meals/100005
 curl -v -X POST http://localhost:8080/topjava/rest/auth-user/meals/ -H "Content-Type:application/json;charset=UTF-8" -d '{"dateTime":"2022-09-13T12:00:00","description":"New meal","calories":999}'
 
 #### MealRestController#update: update user's meal with id = 100018
+```
 curl -X PUT http://localhost:8080/topjava/rest/auth-user/meals/100018 -H "Content-Type:application/json;charset=UTF-8" -d '{"description":"New meal description","calories":1888}'
+```
