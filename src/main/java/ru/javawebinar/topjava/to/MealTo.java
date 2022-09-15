@@ -62,11 +62,11 @@ public class MealTo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MealTo mealTo = (MealTo) o;
-        return getCalories() == calories &&
-                isExcess() == excess &&
-                id.equals(mealTo.id) &&
+        return id.equals(mealTo.id) &&
                 dateTime.equals(mealTo.dateTime) &&
-                description.equals(mealTo.description);
+                description.equals(mealTo.description) &&
+                calories == ((MealTo) o).calories &&
+                excess == ((MealTo) o).excess;
     }
 
     @Override

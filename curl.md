@@ -1,4 +1,5 @@
 ## Testing [MealRestController](src/main/java/ru/javawebinar/topjava/web/meal/MealRestController.java)  of topjava project via curl utility Windows 10, GitBash
+- Windows 10 Pro Version 10.0.21H2 19044.2006
 - IDE: IntelliJ IDEA 2021.3.2 Ultimate
 - Server: Tomcat 9.0.59
 - DBMS: PostgreSQL 13.7
@@ -16,12 +17,22 @@ curl http://localhost:8080/topjava/rest/auth-user/meals/100009
 curl "http://localhost:8080/topjava/rest/auth-user/meals/filter?startDate=2020-01-30&startTime=00:00:00&endDate=2020-01-31&endTime=10:01:00"
 
 ### MealRestController#delete: delete user's meal with id = 100005
-curl -XDELETE http://localhost:8080/topjava/rest/auth-user/meals/100005
+curl -X DELETE http://localhost:8080/topjava/rest/auth-user/meals/100005
 
 #### MealRestController#createWithLocation: create new user's meal
 curl -v -X POST http://localhost:8080/topjava/rest/auth-user/meals/ -H "Content-Type:application/json;charset=UTF-8" -d '{"dateTime":"2022-09-13T12:00:00","description":"New meal","calories":999}'
 
-#### MealRestController#update: update user's meal with id = 100018
+- in Windows Command Prompt use: 
 ```
-curl -X PUT http://localhost:8080/topjava/rest/auth-user/meals/100018 -H "Content-Type:application/json;charset=UTF-8" -d '{"description":"New meal description","calories":1888}'
+curl -v -X POST http://localhost:8080/topjava/rest/auth-user/meals/ -H ""Content-Type:application/json;charset=UTF-8"" -d ""{\"dateTime\":\"2022-09-13T12:00:00\",\"description\":\"New\",\"calories\":999}""
+```
+```
+#### MealRestController#update: update user's meal with id = 100004
+```
+curl -X PUT http://localhost:8080/topjava/rest/auth-user/meals/100004 -H "Content-Type:application/json;charset=UTF-8" -d '{"description":"New meal description","calories":1888}'
+- in Windows Command Prompt use (see **dateTime**):
+```
+curl -v -X PUT http://localhost:8080/topjava/rest/auth-user/meals/100004 -H ""Content-Type:application/json;charset=UTF-8"" -d ""{\"dateTime\":\"2020-01-30T13:00:00\",\"description\":\"New meal description\",\"calories\":1888}""
+```
+```
 ```
