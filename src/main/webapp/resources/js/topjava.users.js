@@ -50,15 +50,14 @@ $(function () {
 });
 
 function enable(userId, checkBox) {
-    let url = ctx.ajaxUrl + userId;
     let enabled = checkBox.is(':checked');
-    let data = "enabled=" + enabled;
-    alert(enabled + " " + url);
-    $.post(url, data)
+    $.post(ctx.ajaxUrl + userId, "enabled=" + enabled)
         .done(function () {
             successNoty(enabled ? "Enabled" : "Disabled");
             // ctx.updateTable();
-            $(checkBox).closest("tr").attr("data-user-enabled", enabled);
+            // $(checkBox).closest("tr").attr("data-user-enabled", data-user-enabled);
+            // $("div.row-form input[type='checkbox']").attr('data-user-enabled', enabled);
+            $("div.row-form #checked").attr('data-user-enabled', enabled);
         })
         .fail($(document).ajaxError(function (event, jqXHR, options, jsExc) {
             failNoty(jqXHR);

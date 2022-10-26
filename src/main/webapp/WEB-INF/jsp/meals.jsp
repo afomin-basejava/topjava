@@ -16,19 +16,19 @@
                 <form id="filter">
                     <div class="row">
                         <div class="col-2">
-                            <label for="startDate">From date (inclusive)</label>
+                            <label for="startDate"><spring:message code="meal.startDate"/></label>
                             <input type="date" class="form-control" name="startDate" id="startDate" autocomplete="off">
                         </div>
                         <div class="col-2">
-                            <label for="endDate">To date (inclusive)</label>
+                            <label for="endDate"><spring:message code="meal.endDate"/></label>
                             <input type="date" class="form-control" name="endDate" id="endDate" autocomplete="off">
                         </div>
                         <div class="offset-2 col-3">
-                            <label for="startTime">From time (inclusive)</label>
+                            <label for="startTime"><spring:message code="meal.startTime"/></label>
                             <input type="time" class="form-control" name="startTime" id="startTime" autocomplete="off">
                         </div>
                         <div class="col-3">
-                            <label for="endTime">To time (exclusive)</label>
+                            <label for="endTime"><spring:message code="meal.endTime"/></label>
                             <input type="time" class="form-control" name="endTime" id="endTime" autocomplete="off">
                         </div>
                     </div>
