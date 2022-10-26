@@ -4,11 +4,8 @@ const mealAjaxUrl = "profile/meals/";
 const ctx = {
     ajaxUrl: mealAjaxUrl,
     updateTable: function () {
-        $.ajax({
-            type: "GET",
-            url: mealAjaxUrl + "filter",
-            data: $("#filter").serialize()
-        }).done(updateTableByData);
+        $.get(mealAjaxUrl + "filter", $("#filter").serialize())
+            .done(updateTableByData);
     }
 };
 
@@ -47,7 +44,7 @@ $(function () {
     );
 });
 
-function clearFilter() {
+function resetFilter() {
     $("#filter")[0].reset();
     $.get(mealAjaxUrl, updateTableByData);
 }

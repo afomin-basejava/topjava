@@ -35,13 +35,13 @@
                 </form>
             </div>
             <div class="card-footer text-right">
-                <button class="btn btn-danger" onclick="clearFilter()">
+                <button class="btn btn-danger" onclick="resetFilter()">
                     <span class="fa fa-remove"></span>
-                    Cancel
+                    <spring:message code="common.cancel"/>
                 </button>
                 <button class="btn btn-primary" onclick="ctx.updateTable()">
                     <span class="fa fa-filter"></span>
-                    Filter
+                    <spring:message code="meal.filter"/>
                 </button>
             </div>
         </div>
@@ -61,7 +61,7 @@
             </thead>
             <c:forEach items="${requestScope.meals}" var="meal">
                 <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
-                <tr id="${meal.id}">
+                <tr id="${meal.id}" data-meal-excess="${meal.excess}">
                     <td>${fn:formatDateTime(meal.dateTime)}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
