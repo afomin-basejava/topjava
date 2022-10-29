@@ -9,7 +9,7 @@ const ctx = {
 }
 
 function enable(chkbox, id) {
-    var enabled = chkbox.is(":checked");
+    let enabled = chkbox.is(":checked");
 //  https://stackoverflow.com/a/22213543/548473
     $.ajax({
         url: userAjaxUrl + id,
@@ -39,7 +39,7 @@ $(function () {
                 },
                 {
                     "data": "email",
-                    "render": function (data, type, row) {
+                    "render": function (data, type) {
                         if (type === "display") {
                             return "<a href='mailto:" + data + "'>" + data + "</a>";
                         }
@@ -60,7 +60,7 @@ $(function () {
                 },
                 {
                     "data": "registered",
-                    "render": function (date, type, row) {
+                    "render": function (date, type) {
                         if (type === "display") {
                             return date.substring(0, 10);
                         }
@@ -84,7 +84,7 @@ $(function () {
                     "asc"
                 ]
             ],
-            "createdRow": function (row, data, dataIndex) {
+            "createdRow": function (row, data) {
                 if (!data.enabled) {
                     $(row).attr("data-user-enabled", false);
                 }
