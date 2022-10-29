@@ -20,6 +20,10 @@ function clearFilter() {
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
+            "ajax": {
+                "url": mealAjaxUrl,
+                "dataSrc": ""
+            },
             "paging": false,
             "info": true,
             "columns": [
@@ -55,10 +59,9 @@ $(function () {
                     "desc"
                 ]
             ],
-            "createdRow": function (row, data, dataIndex) {
+            "createdRow": function (row, data) {
                 $(row).attr("data-meal-excess", data.excess);
-            },
-            "initComplete": makeEditable
+            }
         })
     );
 });
