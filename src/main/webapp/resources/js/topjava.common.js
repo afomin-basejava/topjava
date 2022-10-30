@@ -36,7 +36,7 @@ function deleteRow(id) {
             type: "DELETE"
         }).done(function () {
             ctx.updateTable();
-            successNoty("common.deleted");
+            successNoty(i18n["common.deleted"]);
         });
     }
 }
@@ -53,7 +53,7 @@ function save() {
     }).done(function () {
         $("#editRow").modal("hide");
         ctx.updateTable();
-        successNoty("common.saved");
+        successNoty(i18n['common.saved']);
     });
 }
 
@@ -69,7 +69,7 @@ function closeNoty() {
 function successNoty(key) {
     closeNoty();
     new Noty({
-        text: "<span class='fa fa-lg fa-check'></span> &nbsp;" + i18n[key],
+        text: "<span class='fa fa-lg fa-check'></span> &nbsp;" + key,
         type: 'success',
         layout: "bottomRight",
         timeout: 1000
