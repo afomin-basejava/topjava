@@ -13,16 +13,16 @@ const ctx = {
 }
 $.ajaxSetup({
     converters: {
-        'text json': function (stringText) {
-            let jsonresult = JSON.parse(stringText);
-            if (typeof (jsonresult) === 'object') {
-                $(jsonresult).each(function () {
+        'text json': function (text) {
+            let json = JSON.parse(text);
+            if (typeof (json) === 'object') {
+                $(json).each(function () {
                     if (this.hasOwnProperty('dateTime')) {
                         this.dateTime = this.dateTime.replace('T', ' ');
                     }
                 });
             }
-            return jsonresult;
+            return json;
         }
     }
 });
