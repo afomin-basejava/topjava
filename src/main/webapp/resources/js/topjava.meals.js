@@ -18,7 +18,7 @@ $.ajaxSetup({
             if (typeof (json) === 'object') {
                 $(json).each(function () {
                     if (this.hasOwnProperty('dateTime')) {
-                        this.dateTime = this.dateTime.replace('T', ' ');
+                        this.dateTime = this.dateTime.replace('T', ' ').substring(0, 16);
                     }
                 });
             }
@@ -46,7 +46,7 @@ $(function () {
                     "data": "dateTime",
                     "render": function (date, type, row) {
                         if (type === "display") {
-                            return date.replace('T', '*'); // ajaxSetup converters beats render (runs first)
+                            return date.replace('T', '*').substring(0, 16); // ajaxSetup converters beats render (runs first)
                         }
                         return date;
                     }
@@ -80,7 +80,7 @@ $(function () {
         })
     );
 
-    $.datetimepicker.setLocale(window.navigator.language.substring(0,2));
+    $.datetimepicker.setLocale(window.navigator.language.substring(0, 2));
     //  http://xdsoft.net/jqplugins/datetimepicker/
     let startDate = $('#startDate');
     let endDate = $('#endDate');
