@@ -17,7 +17,7 @@ function enable(chkbox, id) {
         data: "enabled=" + enabled
     }).done(function () {
         chkbox.closest("tr").attr("data-user-enabled", enabled);
-        successNoty(enabled ? "common.enabled" : "common.disabled");
+        successNoty(enabled ? i18n["common.enabled"] : i18n["common.disabled"]);
     }).fail(function () {
         $(chkbox).prop("checked", !enabled);
     });

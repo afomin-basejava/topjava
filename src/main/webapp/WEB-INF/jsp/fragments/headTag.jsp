@@ -22,6 +22,4 @@
     <script src="webjars/datatables/1.11.4/js/dataTables.bootstrap4.min.js" defer></script>
     <script src="webjars/noty/3.1.4/lib/noty.min.js" defer></script>
     <script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.full.js" defer></script>
-<%--    datetimepicker-2.5.20-1.jar\META-INF\resources\webjars\datetimepicker\2.5.20-1\build - ZIP архив, размер исходных файлов 733 840 байт--%>
-<%--    C:\Users\user\.m2\repository\org\webjars\datetimepicker\2.5.20-1\datetimepicker-2.5.20-1.jar!\META-INF\resources\webjars\datetimepicker\2.5.20-1\datetimepicker.jquery.json--%>
 </head>

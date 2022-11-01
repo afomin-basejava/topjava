@@ -49,8 +49,6 @@ public class AdminUIController extends AbstractUserController {
         return ResponseEntity.ok().build();
     }
 
-
-
     @Override
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

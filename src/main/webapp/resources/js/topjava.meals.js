@@ -44,12 +44,6 @@ $(function () {
             "columns": [
                 {
                     "data": "dateTime",
-                    "render": function (date, type, row) {
-                        if (type === "display") {
-                            return date.replace('T', '*').substring(0, 16); // ajaxSetup converters beats render (runs first)
-                        }
-                        return date;
-                    }
                 },
                 {
                     "data": "description"
