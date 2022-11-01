@@ -23,12 +23,8 @@ tr[data-meal-excess="true"] {
     color: red;
 }
 
-tr[data-user-enabled="true"] {
-    color: darkblue;
-}
-
 tr[data-user-enabled="false"] {
-    color: orangered;
+    opacity: 50%;
 }
 
 .fa {

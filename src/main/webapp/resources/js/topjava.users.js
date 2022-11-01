@@ -56,10 +56,13 @@ function enable(userId, checkBox) {
             successNoty(enabled ? "Enabled" : "Disabled");
             // ctx.updateTable();
             // $(checkBox).closest("tr").attr("data-user-enabled", data-user-enabled);
+            // $(chkbox).prop("checked", enabled);
             // $("div.row-form input[type='checkbox']").attr('data-user-enabled', enabled);
             $("div.row-form #checked").attr('data-user-enabled', enabled);
         })
-        .fail($(document).ajaxError(function (event, jqXHR, options, jsExc) {
-            failNoty(jqXHR);
-        }));
+        .fail(function (jqXHR) {
+            notifyNoty("Oops! User " + userId + " doesn't exist!" + " Error status: " + jqXHR.status);
+            $("div.row-form #checked").attr('data-user-enabled', !enabled);
+            ctx.updateTable();
+        });
 }

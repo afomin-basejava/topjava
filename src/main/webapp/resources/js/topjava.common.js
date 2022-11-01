@@ -18,13 +18,20 @@ function add() {
 }
 
 function deleteRow(id) {
-    $.ajax({
-        url: ctx.ajaxUrl + id,
-        type: "DELETE"
-    }).done(function () {
-        ctx.updateTable();
-        successNoty("Deleted");
-    });
+    if (confirm(((navigator && navigator.language)).substring(0, 2) === 'ru' ? 'Вы уверены?' : 'Are you sure?')) {
+        $.ajax({
+            url: ctx.ajaxUrl + id,
+            type: "DELETE"
+        }).done(function () {
+            ctx.updateTable();
+            successNoty("Deleted");
+        }).fail(function(data){
+            $(document).ajaxError(function (event, jqXHR, options, jsExc) {
+                failNoty(jqXHR);
+            })
+            ctx.updateTable();
+        });
+    }
 }
 
 function updateTableByData(data) {
@@ -58,7 +65,7 @@ function successNoty(text) {
         text: "<span class='fa fa-lg fa-check'></span> &nbsp;" + text,
         type: 'success',
         layout: "bottomRight",
-        timeout: 1000
+        timeout: 2000
     }).show();
 }
 
@@ -70,4 +77,14 @@ function failNoty(jqXHR) {
         layout: "bottomRight"
     });
     failedNote.show()
+}
+
+function notifyNoty(text) {
+    closeNoty();
+    new Noty({
+        text: "<span class='fa fa-lg fa-check-circle'></span> &nbsp; " + text,
+        type: "error",
+        layout: "bottomLeft",
+        timeout: 3000
+    }).show();
 }

@@ -37,7 +37,7 @@ $(function () {
             "order": [
                 [
                     0,
-                    "asc"
+                    "dsc"
                 ]
             ]
         })
