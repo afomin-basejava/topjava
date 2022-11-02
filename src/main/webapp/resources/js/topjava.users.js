@@ -61,8 +61,7 @@ function enable(userId, checkBox) {
             $("div.row-form #checked").attr('data-user-enabled', enabled);
         })
         .fail(function (jqXHR) {
-            notifyNoty("Oops! User " + userId + " doesn't exist!" + " Error status: " + jqXHR.status);
+            notifyNoty("Oops! Something wong!" + " Error status: " + jqXHR.status);
             $("div.row-form #checked").attr('data-user-enabled', !enabled);
-            ctx.updateTable();
         });
 }
