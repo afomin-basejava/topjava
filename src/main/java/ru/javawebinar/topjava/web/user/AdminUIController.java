@@ -2,8 +2,6 @@ package ru.javawebinar.topjava.web.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
@@ -36,10 +34,7 @@ public class AdminUIController extends AbstractUserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createOrUpdate(@Valid UserTo userTo, BindingResult result) throws BindException {
-        if (result.hasErrors()) {
-            throw new BindException(result);
-        }
+    public void createOrUpdate(@Valid UserTo userTo) {
         if (userTo.isNew()) {
             super.create(userTo);
         } else {
