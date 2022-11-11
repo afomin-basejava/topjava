@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -14,8 +13,7 @@ import ru.javawebinar.topjava.web.AbstractControllerTest;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
 
@@ -94,6 +92,43 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userService.get(USER_ID), updated);
+    }
+
+    @Test
+    void updateWithInvalidData() throws Exception {
+        final String localhostUrl = "http://localhost" + REST_URL + USER_ID;
+        User withInvalidData = getWithInvalidData();
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(withInvalidData, withInvalidData.getPassword())))
+                .andExpectAll(
+                        (status().isUnprocessableEntity()),
+                        (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
+                        jsonPath("$.url").value(localhostUrl),
+                        jsonPath("$.type").value("VALIDATION_ERROR")
+//                        jsonPath("$['details'][0]").value("*caloriesPerDay* must be between 10 and 10000")
+                )
+                .andDo(print());
+    }
+
+    @Test
+    void createWithInvalidData() throws Exception {
+        final String localhostUrl = "http://localhost" + REST_URL + USER_ID;
+        User withInvalidData = getWithInvalidData();
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(withInvalidData, withInvalidData.getPassword())))
+                .andExpectAll(
+                        (status().isUnprocessableEntity()),
+                        (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
+                        jsonPath("$.url").value(localhostUrl),
+                        jsonPath("$.type").value("VALIDATION_ERROR")
+//                      work unstably ?
+//                      jsonPath("$['details'][0]").value("*caloriesPerDay* must be between 10 and 10000")
+                )
+                .andDo(print());
     }
 
     @Test

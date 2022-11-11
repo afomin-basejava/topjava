@@ -51,6 +51,16 @@ public class UserTestData {
         return updated;
     }
 
+    public static User getWithInvalidData() {
+        User withInvalidData = new User(user);
+        withInvalidData.setName("");
+        withInvalidData.setEmail("user_yandex.ru");
+        withInvalidData.setRegistered(null);
+        withInvalidData.setCaloriesPerDay(99999);
+        withInvalidData.setRoles(List.of(Role.ADMIN, Role.USER));
+        return withInvalidData;
+    }
+
     public static String jsonWithPassword(User user, String passw) {
         return JsonUtil.writeAdditionProps(user, "password", passw);
     }

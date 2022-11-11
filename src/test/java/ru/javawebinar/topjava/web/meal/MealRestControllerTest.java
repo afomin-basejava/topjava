@@ -14,8 +14,7 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -78,6 +77,36 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
+    }
+
+    @Test
+    void updateWithInvalidData() throws Exception {
+        final String localhostUrl = "http://localhost" + REST_URL + MEAL1_ID;
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(getwithInvalidData())))
+                .andExpectAll(
+                        (status().isUnprocessableEntity()),
+                        (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
+                        jsonPath("$.url").value(localhostUrl),
+                        jsonPath("$.type").value("VALIDATION_ERROR")
+//                        jsonPath("$['details'][0]").value("*dateTime* must not be null")
+                )
+                .andDo(print());
+    }
+
+    @Test
+    void createWithInvalidData() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(getwithInvalidData())))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpectAll(
+                        (status().isUnprocessableEntity()),
+                        (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
+                        jsonPath("$.type").value("VALIDATION_ERROR")
+                )
+                .andDo(print());
     }
 
     @Test
