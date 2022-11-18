@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -112,7 +113,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andDo(print());
     }
 
-    @Test
+    @RepeatedTest(10)
     void createWithInvalidData() throws Exception {
         final String localhostUrl = "http://localhost" + REST_URL + USER_ID;
         User withInvalidData = getWithInvalidData();
@@ -125,8 +126,9 @@ class AdminRestControllerTest extends AbstractControllerTest {
                         (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
                         jsonPath("$.url").value(localhostUrl),
                         jsonPath("$.type").value("VALIDATION_ERROR")
-//                      work unstably ?
-//                      jsonPath("$['details'][0]").value("*caloriesPerDay* must be between 10 and 10000")
+//                        jsonPath("$['details'][0]").value("*name* must not be blank")
+//                        Body = {"url":"http://localhost/rest/admin/users/100000","type":"VALIDATION_ERROR","details":["*name* must not be blank","*caloriesPerDay* must be between 10 and 10000","*email* must be a well-formed email address","*name* size must be between 2 and 128"]}
+
                 )
                 .andDo(print());
     }
