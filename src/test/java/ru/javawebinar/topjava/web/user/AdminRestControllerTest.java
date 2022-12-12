@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class AdminRestControllerTest extends AbstractControllerTest {
 
@@ -107,7 +108,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                         (status().isUnprocessableEntity()),
                         (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
                         jsonPath("$.url").value(localhostUrl),
-                        jsonPath("$.type").value("VALIDATION_ERROR")
+                        jsonPath("$.type").value(VALIDATION_ERROR.name())
 //                        jsonPath("$['details'][0]").value("*caloriesPerDay* must be between 10 and 10000")
                 )
                 .andDo(print());
@@ -125,7 +126,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                         (status().isUnprocessableEntity()),
                         (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
                         jsonPath("$.url").value(localhostUrl),
-                        jsonPath("$.type").value("VALIDATION_ERROR")
+                        jsonPath("$.type").value(VALIDATION_ERROR.name())
 //                        jsonPath("$['details'][0]").value("*name* must not be blank")
 //                        Body = {"url":"http://localhost/rest/admin/users/100000","type":"VALIDATION_ERROR","details":["*name* must not be blank","*caloriesPerDay* must be between 10 and 10000","*email* must be a well-formed email address","*name* size must be between 2 and 128"]}
 

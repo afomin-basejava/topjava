@@ -21,6 +21,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.UserTestData.user;
 import static ru.javawebinar.topjava.util.MealsUtil.createTo;
 import static ru.javawebinar.topjava.util.MealsUtil.getTos;
+import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class MealRestControllerTest extends AbstractControllerTest {
 
@@ -89,7 +90,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                         (status().isUnprocessableEntity()),
                         (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
                         jsonPath("$.url").value(localhostUrl),
-                        jsonPath("$.type").value("VALIDATION_ERROR")
+                        jsonPath("$.type").value(VALIDATION_ERROR.name())
 //                        jsonPath("$['details'][0]").value("*dateTime* must not be null")
                 )
                 .andDo(print());
@@ -104,7 +105,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpectAll(
                         (status().isUnprocessableEntity()),
                         (content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)),
-                        jsonPath("$.type").value("VALIDATION_ERROR")
+                        jsonPath("$.type").value(VALIDATION_ERROR.name())
                 )
                 .andDo(print());
     }

@@ -38,6 +38,7 @@ public class MealUIController extends AbstractMealController {
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void createOrUpdate(@Valid Meal meal) {
+        log.debug("MealUIController#createOrUpdate {}", meal);
         if (meal.isNew()) {
             super.create(meal);
         } else {

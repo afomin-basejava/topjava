@@ -82,7 +82,7 @@ public class ExceptionInfoHandler {
 
     private static String[] getErrorsText(Throwable rootCause, String[] errors) {
         if (errors.length == 0) {
-            return new String[]{rootCause.toString()};
+            return new String[]{rootCause.getLocalizedMessage()};
         } else {
             return errors;
         }

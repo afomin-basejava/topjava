@@ -33,7 +33,7 @@ public class ProfileUIController extends AbstractUserController {
             status.setComplete();
             return "redirect:/meals";
         } catch (DataIntegrityViolationException dive) {
-            result.rejectValue("email", "exception.user.email.duplicated");
+            result.rejectValue("email", EXCEPTION_USER_EMAIL_DUPLICATED);
             return "profile";
         }
     }
@@ -49,7 +49,8 @@ public class ProfileUIController extends AbstractUserController {
             status.setComplete();
             return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
         } catch (DataIntegrityViolationException dive) {
-            result.rejectValue("email", "exception.user.email.duplicated");
+            model.addAttribute("register", true);
+            result.rejectValue("email", EXCEPTION_USER_EMAIL_DUPLICATED);
             return "profile";
         }
     }
