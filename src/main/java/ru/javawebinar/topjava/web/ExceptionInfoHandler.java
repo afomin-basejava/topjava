@@ -31,8 +31,8 @@ public class ExceptionInfoHandler {
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
-    public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
-        log.debug("handleError");
+    public ErrorInfo handleDataNotFoundError(HttpServletRequest req, NotFoundException e) {
+        log.debug("handleDataNotFoundError");
         return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
     }
 
@@ -45,7 +45,7 @@ public class ExceptionInfoHandler {
                 .stream()
                 .map(fe -> String.format("*%s* %s", fe.getField(), fe.getDefaultMessage()))
                 .toArray(String[]::new);
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, errors);
+        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR, errors);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
@@ -64,8 +64,8 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ErrorInfo handleError(HttpServletRequest req, Exception e) {
-        log.debug("handleError");
+    public ErrorInfo handleInternalServerError(HttpServletRequest req, Exception e) {
+        log.debug("handleInternalServerError");
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
     }
 
