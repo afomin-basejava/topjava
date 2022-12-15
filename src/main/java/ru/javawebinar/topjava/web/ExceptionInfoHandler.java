@@ -43,16 +43,16 @@ public class ExceptionInfoHandler {
         String[] errors = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(fe -> String.format("*%s* %s", fe.getField(), fe.getDefaultMessage()))
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .toArray(String[]::new);
-        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR, errors);
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, errors);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         log.debug("conflict");
-        return logAndGetErrorInfo(req, e, true, DATA_ERROR);
+        return logAndGetErrorInfo(req, e, false, DATA_ERROR);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
@@ -66,7 +66,7 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(Exception.class)
     public ErrorInfo handleInternalServerError(HttpServletRequest req, Exception e) {
         log.debug("handleInternalServerError");
-        return logAndGetErrorInfo(req, e, true, APP_ERROR);
+        return logAndGetErrorInfo(req, e, false, APP_ERROR);
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
